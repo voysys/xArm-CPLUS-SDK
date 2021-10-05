@@ -650,6 +650,15 @@ public:
 	int set_gripper_position(fp32 pos, bool wait = false, fp32 timeout = 10);
 
 	/*
+	* Set the gripper position without waiting for the previous command
+	* @param pos: gripper position
+	* @param wait: wait or not, default is false
+	* @param timeout: maximum waiting time(unit: second), default is 10s, only valid if wait is true
+	* return: see the API code documentation for details.
+	*/
+	int set_gripper_positionj(fp32 pos);
+
+	/*
 	* Set the gripper speed
 	* @param speed:
 	* return: see the API code documentation for details.

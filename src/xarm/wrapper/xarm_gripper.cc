@@ -243,6 +243,26 @@ int XArmAPI::set_gripper_position(fp32 pos, bool wait, fp32 timeout) {
 	return ret;
 }
 
+int XArmAPI::set_gripper_positionj(fp32 pos) {
+	if (!is_connected())
+		return API_CODE::NOT_CONNECTED;
+	bool has_error = error_code != 0;
+	bool is_stop = state == 4 || state == 5;
+	if (is_stop || has_error) {
+		return -1;
+	}
+	if (_checkset_modbus_baud(2000000) != 0)
+		return API_CODE::MODBUS_BAUD_NOT_CORRECT;
+	int ret = core->gripper_modbus_set_pos(pos);
+	int err;
+	get_gripper_err_code(&err);
+	ret = _check_modbus_code(ret);
+	if (xarm_gripper_error_code_ != 0)
+		return API_CODE::END_EFFECTOR_HAS_FAULT;
+
+	return ret;
+}
+
 int XArmAPI::clean_gripper_error(void) {
 	if (!is_connected()) return API_CODE::NOT_CONNECTED;
 	if (_checkset_modbus_baud(2000000) != 0) return API_CODE::MODBUS_BAUD_NOT_CORRECT;
